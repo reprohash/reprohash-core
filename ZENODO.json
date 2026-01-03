@@ -1,0 +1,27 @@
+{
+  "title": "ReproHash v2.1.9: Cryptographic Input Verification for Computational Research",
+  "upload_type": "software",
+  "description": "Reference bundles, test vectors, and specifications supporting the ReproHash verification framework.",
+  "creators": [
+    {
+      "name": "Your Name",
+      "affiliation": "Your Institution",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "reproducibility",
+    "computational methods",
+    "cryptographic verification",
+    "scientific workflows"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "DOI_OF_NATURE_PAPER",
+      "scheme": "doi"
+    }
+  ]
+}
+

@@ -1,0 +1,110 @@
+# Canonical JSON Specification v1.0
+# For deterministic serialization in ReproHash
+
+version: "1.0"
+status: "normative"
+date: "2025-01-03"
+
+purpose: |
+  Define canonical JSON serialization for deterministic hashing.
+  Enables implementation-independent verification with known constraints.
+
+serialization_rules:
+  key_ordering: "lexicographic (UTF-8 byte order)"
+  whitespace: "none (compact)"
+  separators:
+    item: ","
+    key_value: ":"
+  encoding: "UTF-8"
+  
+  supported_types:
+    string:
+      encoding: "JSON-escaped Unicode"
+      note: "UTF-8 assumed, no explicit normalization"
+    
+    integer:
+      format: "decimal notation"
+      range: "JSON safe integer range (-2^53+1 to 2^53-1)"
+      note: "Larger integers may have platform-specific behavior"
+    
+    number:
+      format: "Python json.dumps default"
+      precision: "platform-dependent"
+      note: "NOT IEEE 754 controlled. For determinism, use only integers or strings."
+      
+    boolean:
+      values: ["true", "false"]
+    
+    null:
+      value: "null"
+    
+    array:
+      ordering: "preserved as provided"
+      note: "Caller responsible for deterministic ordering"
+    
+    object:
+      key_ordering: "sorted lexicographically"
+      key_type: "string only"
+
+implementation_requirements:
+  must:
+    - "Sort object keys lexicographically"
+    - "Use compact serialization (no whitespace)"
+    - "Use UTF-8 encoding"
+    - "Preserve array ordering"
+  
+  must_not:
+    - "Add whitespace"
+    - "Reorder arrays"
+    - "Use non-string object keys"
+
+known_limitations:
+  floats:
+    issue: "Platform-dependent precision"
+    mitigation: "ReproHash structures use only strings and integers"
+    
+  unicode:
+    issue: "No explicit NFC/NFD normalization"
+    mitigation: "Assumes input is pre-normalized (NFC by default)"
+    
+  python_specific:
+    issue: "Relies on Python json module semantics"
+    status: "Acknowledged. Multi-language implementations must match behavior."
+
+conformance:
+  test_vectors:
+    - input: {"z": 1, "a": 2}
+      output: '{"a":2,"z":1}'
+    
+    - input: {"files": [{"path": "a.txt", "size": 100}]}
+      output: '{"files":[{"path":"a.txt","size":100}]}'
+    
+    - input: {"version": "2.1", "count": 42, "data": null}
+      output: '{"count":42,"data":null,"version":"2.1"}'
+
+recommended_usage:
+  safe_types:
+    - "strings (for hashes, paths, identifiers)"
+    - "integers (for sizes, counts)"
+    - "lists of strings or integers"
+    - "nested objects with string keys"
+  
+  avoid:
+    - "floating-point numbers (use strings if precision matters)"
+    - "very large integers (>2^53)"
+    - "non-NFC Unicode (pre-normalize)"
+
+implementation_guidance: |
+  For true implementation-independence:
+  1. Use only safe types (strings, integers)
+  2. Pre-normalize Unicode to NFC
+  3. Test against provided test vectors
+  4. Document any deviations
+
+  For Python specifically:
+  Use json.dumps(obj, sort_keys=True, separators=(',', ':'))
+
+future_work:
+  - "IEEE 754 float specification"
+  - "Explicit Unicode normalization"
+  - "Language-agnostic formal grammar"

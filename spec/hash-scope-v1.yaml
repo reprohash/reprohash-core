@@ -1,0 +1,93 @@
+# ReproHash Hash Scope Specification v1.0
+# Language-independent reference for snapshot hash computation
+
+version: "1.0"
+spec_date: "2025-01-03"
+status: "normative"
+
+hash_algorithm:
+  name: "SHA-256"
+  output: "256-bit hex string (64 characters)"
+  note: "If SHA-256 is weakened, migrate to SHA-3"
+
+hash_scope:
+  description: "Only these fields are included in content_hash"
+  fields:
+    - name: "version"
+      type: "string"
+      description: "ReproHash version string"
+      example: "2.1"
+      
+    - name: "source_type"
+      type: "string"
+      description: "Origin of files"
+      values: ["posix", "container", "drive"]
+      
+    - name: "files"
+      type: "array of objects"
+      description: "List of file records"
+      ordering: "MUST be sorted lexicographically by path field"
+      
+      file_record:
+        - name: "path"
+          type: "string"
+          description: "Relative path from snapshot root"
+          comparison: "UTF-8 bytewise, case-sensitive"
+          
+        - name: "sha256"
+          type: "string"
+          description: "SHA-256 hash of file content (hex)"
+          length: 64
+          
+        - name: "size"
+          type: "integer"
+          description: "File size in bytes"
+
+explicitly_excluded:
+  description: "These fields MUST NOT affect content_hash"
+  fields:
+    - "created_at"
+    - "annotations"
+    - "drive_metadata"
+    - "container_metadata"
+    - any other metadata not listed in hash_scope
+
+canonicalization:
+  format: "JSON"
+  rules:
+    - "Keys sorted lexicographically"
+    - "No whitespace (compact serialization)"
+    - "Separators: ',' between items, ':' between key-value"
+    - "UTF-8 encoding"
+  
+  example_input:
+    version: "2.1"
+    source_type: "posix"
+    files:
+      - path: "a.txt"
+        sha256: "abc123..."
+        size: 100
+  
+  example_canonical: '{"files":[{"path":"a.txt","sha256":"abc123...","size":100}],"source_type":"posix","version":"2.1"}'
+  
+  example_hash: "SHA256(example_canonical.encode('utf-8'))"
+
+determinism_guarantees:
+  - "Same files → same hash (independent of filesystem traversal order)"
+  - "Same manifest → same canonical JSON (independent of initial serialization)"
+  - "Same canonical JSON → same hash (deterministic SHA-256)"
+
+verification_procedure:
+  1: "Load snapshot JSON"
+  2: "Extract hashable_manifest object"
+  3: "Sort files array by path field"
+  4: "Serialize to canonical JSON"
+  5: "Compute SHA-256 of UTF-8 bytes"
+  6: "Compare with content_hash field"
+
+reference_implementation: "https://github.com/reprohash/reprohash-core"
+
+notes:
+  - "This spec enables language-independent implementations"
+  - "Implementations MUST produce identical hashes for identical inputs"
+  - "Future versions may extend fields but MUST NOT change canonicalization"
