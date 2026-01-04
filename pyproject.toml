@@ -1,25 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "reprohash-core"
 version = "2.1.9"
-description = "Creates cryptographic snapshots of computational input states and enables verification without re-execution."
+description = "Cryptographic Input State Verification for Scientific Computing"
 authors = [
-    {name = "Michael Atambo", email = "matambo4999@gmail.com"}
+    {name = "ReproHash Contributors", email = "opensource@reprohash.org"}
 ]
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = []
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
-    "coverage[toml]>=7.0",
     "black>=23.0",
-    "ruff>=0.1.0",
     "mypy>=1.0",
 ]
 
-[tool.setuptools]
-packages = ["reprohash", "spec","tests","docs"]
+[project.scripts]
+reprohash = "reprohash.cli:main"
 
-[tool.setuptools.package-data]
-reprohash = ["*.py"]
-spec = ["*.yaml"]
-docs = ["*.md"]
-tests = ["*.py"]
+[project.urls]
+Homepage = "https://reprohash.org"
+Repository = "https://github.com/reprohash/reprohash-core"
+Documentation = "https://docs.reprohash.org"
+"Bug Tracker" = "https://github.com/reprohash/reprohash-core/issues"
+
+# THIS SECTION INCLUDES docs/ and spec/ directories
+[tool.setuptools]
+packages = ["reprohash"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--cov=reprohash --cov-report=term-missing --cov-report=html"
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
