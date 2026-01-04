@@ -1,11 +1,5 @@
 # ReproHash - Cryptographic Input State Verification
 
-**Version**: 2.1.9  
-**License**: Apache 2.0  
-**Status**: Submission-ready within declared constraints
-
----
-
 ## What ReproHash Does
 
 Creates cryptographic snapshots of computational input states and enables 
@@ -408,6 +402,10 @@ your company existing.**
 
 By encoding this principle structurally, ReproHash will still be working—and 
 papers will still be verifiable—in 2037.
+
+[![Tests](https://github.com/reprohash/reprohash-core/workflows/Tests/badge.svg)](https://github.com/reprohash/reprohash-core/actions)
+[![Coverage](https://codecov.io/gh/reprohash/reprohash-core/branch/main/graph/badge.svg)](https://codecov.io/gh/reprohash/reprohash-core)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ---
 
