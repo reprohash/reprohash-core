@@ -42,13 +42,9 @@ Repository = "https://github.com/reprohash/reprohash-core"
 Documentation = "https://docs.reprohash.org"
 "Bug Tracker" = "https://github.com/reprohash/reprohash-core/issues"
 
-# CRITICAL FIX: Tell setuptools where to find packages
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["reprohash*"]
-exclude = ["tests*"]
-
+# CRITICAL: This fixes both package discovery and module import
 [tool.setuptools]
+packages = ["reprohash"]
 include-package-data = true
 
 [tool.pytest.ini_options]
