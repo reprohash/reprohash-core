@@ -183,7 +183,10 @@ class RunRecord:
                 "exit_code": self.exit_code,
                 "started_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(self.started)) if self.started else None,
                 "ended_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(self.ended)) if self.ended else None,
-                "duration_seconds": round(self.ended - self.started, 2) if self.started and self.ended else None
+                "duration_seconds": round(self.ended - self.started, 2) if self.started and self.ended else None,
+                # FIX: Store raw timestamps for verification
+                "started_timestamp": self.started,
+                "ended_timestamp": self.ended
             },
             
             "reproducibility_class": self.reproducibility_class.value,

@@ -229,27 +229,10 @@ def verify_runrecord(runrecord_file: str) -> VerificationResult:
     # Full cryptographic seal verification
     try:
         from .snapshot import canonical_json
-        import time
         
-        # Parse timestamps
-        started = None
-        ended = None
-        
-        if runrecord['execution'].get('started_at'):
-            started = time.mktime(
-                time.strptime(
-                    runrecord['execution']['started_at'],
-                    "%Y-%m-%dT%H:%M:%SZ"
-                )
-            )
-        
-        if runrecord['execution'].get('ended_at'):
-            ended = time.mktime(
-                time.strptime(
-                    runrecord['execution']['ended_at'],
-                    "%Y-%m-%dT%H:%M:%SZ"
-                )
-            )
+        # FIX: Use raw timestamps from execution section
+        started = runrecord['execution'].get('started_timestamp')
+        ended = runrecord['execution'].get('ended_timestamp')
         
         sealed_record = {
             "run_id": runrecord.get('run_id'),

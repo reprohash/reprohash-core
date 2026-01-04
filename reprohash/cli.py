@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-Complete CLI with full bundle support.
+Complete CLI with prospective-only runrecord creation.
 
-All Methods section promises are CLI-executable.
+Design principle: CLI enforces prospective recording via 'run' command only.
+Retroactive creation requires programmatic API (explicit bypass of safeguards).
 """
 
 import sys
 import argparse
 import json
+import subprocess
+import time
 from pathlib import Path
 
 
@@ -27,6 +30,20 @@ def main():
     snapshot_parser.add_argument('--source', choices=['posix', 'container', 'drive'], 
                                 default='posix', help='Source type')
     
+    # Run command (ONLY way to create runrecords via CLI)
+    run_parser = subparsers.add_parser('run', 
+                                       help='Execute command and create sealed runrecord (prospective recording only)')
+    run_parser.add_argument('--input-hash', required=True,
+                           help='Input snapshot hash')
+    run_parser.add_argument('--command', required=True,
+                           help='Command to execute')
+    run_parser.add_argument('-o', '--output', required=True,
+                           help='Output runrecord JSON file')
+    run_parser.add_argument('--reproducibility-class',
+                           choices=['deterministic', 'stochastic', 'unknown'],
+                           default='unknown',
+                           help='Reproducibility class (default: unknown)')
+    
     # Verify snapshot command
     verify_parser = subparsers.add_parser('verify', help='Verify snapshot')
     verify_parser.add_argument('snapshot', help='Snapshot file')
@@ -44,7 +61,7 @@ def main():
     verify_bundle_parser.add_argument('-d', '--data-dir', 
                                      help='Data directory for snapshot verification (optional)')
     
-    # Create bundle command (COMPLETE)
+    # Create bundle command
     bundle_parser = subparsers.add_parser('create-bundle', 
                                          help='Create complete verification bundle')
     bundle_parser.add_argument('--input-snapshot', required=True, 
@@ -75,6 +92,49 @@ def main():
         print(f"✓ Snapshot created: {args.output}")
         print(f"  Content hash: {snapshot.content_hash}")
     
+    elif args.command == 'run':
+        from reprohash import RunRecord, ReproducibilityClass
+        
+        print(f"🚀 Executing: {args.command}")
+        print(f"   Input hash: {args.input_hash[:16]}...")
+        print()
+        
+        # Create runrecord
+        repro_class = ReproducibilityClass[args.reproducibility_class.upper()]
+        runrecord = RunRecord(args.input_hash, args.command, repro_class)
+        
+        # Execute command and capture timing
+        runrecord.started = time.time()
+        try:
+            result = subprocess.run(args.command, shell=True)
+            exit_code = result.returncode
+        except Exception as e:
+            print(f"✗ Execution failed: {e}")
+            exit_code = 1
+        
+        runrecord.ended = time.time()
+        runrecord.exit_code = exit_code
+        
+        # Seal immediately (prospective recording)
+        seal_hash = runrecord.seal()
+        
+        # Export to JSON
+        with open(args.output, 'w') as f:
+            json.dump(runrecord.to_dict(), f, indent=2)
+        
+        print()
+        print(f"✓ RunRecord created and sealed: {args.output}")
+        print(f"  Run ID: {runrecord.run_id}")
+        print(f"  Seal hash: {seal_hash}")
+        print(f"  Exit code: {exit_code}")
+        print(f"  Duration: {runrecord.ended - runrecord.started:.2f}s")
+        print()
+        print("ℹ  Note: Output snapshot binding requires programmatic API")
+        print("   See: https://docs.reprohash.org/advanced-workflows")
+        
+        # Exit with same code as the executed command
+        sys.exit(exit_code)
+    
     elif args.command == 'verify':
         from reprohash import verify_snapshot
         
@@ -97,7 +157,7 @@ def main():
         sys.exit(0 if result.outcome.value == "PASS_INPUT_INTEGRITY" else 1)
     
     elif args.command == 'create-bundle':
-        # Full implementation (no "requires programmatic API")
+        # Full implementation
         from reprohash import Snapshot, RunRecord, SourceType
         from reprohash.bundle import ZenodoBundle
         
@@ -129,9 +189,11 @@ def main():
         runrecord.run_id = rr_data['run_id']
         runrecord.runrecord_hash = rr_data['runrecord_hash']
         runrecord.exit_code = rr_data['execution'].get('exit_code')
+        runrecord.started = rr_data['execution'].get('started_timestamp')
+        runrecord.ended = rr_data['execution'].get('ended_timestamp')
         
         if rr_data['provenance'].get('output_snapshot'):
-            runrecord.bind_output(rr_data['provenance']['output_snapshot'])
+            runrecord.output_snapshot_hash = rr_data['provenance']['output_snapshot']
         
         # Load output snapshot if provided
         output_snapshot = None
@@ -164,7 +226,7 @@ def _print_result(result):
     print(f"{'='*60}")
     
     if result.errors:
-        print("\n❌ Errors:")
+        print("\n✗ Errors:")
         for err in result.errors:
             print(f"  • {err}")
     
