@@ -14,3 +14,12 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0",
 ]
+
+[tool.setuptools]
+packages = ["reprohash", "spec","tests","docs"]
+
+[tool.setuptools.package-data]
+reprohash = ["*.py"]
+spec = ["*.yaml"]
+docs = ["*.md"]
+tests = ["*.py"]
