@@ -45,8 +45,6 @@ Documentation = "https://docs.reprohash.org"
 # THIS SECTION INCLUDES docs/ and spec/ directories
 [tool.setuptools]
 packages = ["reprohash"]
-
-[tool.setuptools]
 include-package-data = true
 
 [tool.pytest.ini_options]
