@@ -1,3 +1,10 @@
+[project]
+name = "reprohash-core"
+version = "2.1.9"
+description = "Creates cryptographic snapshots of computational input states and enables verification without re-execution."
+authors = [
+    {name = "Michael Atambo", email = "matambo4999@gmail.com"}
+]
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
