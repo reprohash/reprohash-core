@@ -1,0 +1,63 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    
+    - name: Install ReproHash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+    
+    - name: Create test data
+      run: |
+        mkdir -p test_data
+        echo "test content 1" > test_data/file1.txt
+        echo "test content 2" > test_data/file2.txt
+    
+    - name: Test snapshot creation
+      run: |
+        reprohash snapshot test_data/ -o snapshot.json
+        test -f snapshot.json
+    
+    - name: Test snapshot verification
+      run: |
+        reprohash verify snapshot.json -d test_data/
+    
+    - name: Test determinism (same hash twice)
+      run: |
+        reprohash snapshot test_data/ -o snapshot1.json
+        reprohash snapshot test_data/ -o snapshot2.json
+        hash1=$(jq -r '.content_hash' snapshot1.json)
+        hash2=$(jq -r '.content_hash' snapshot2.json)
+        if [ "$hash1" != "$hash2" ]; then
+          echo "ERROR: Hashes differ!"
+          echo "Hash 1: $hash1"
+          echo "Hash 2: $hash2"
+          exit 1
+        fi
+        echo "✓ Determinism verified: $hash1"
+    
+    - name: Test verification failure detection
+      run: |
+        echo "modified" > test_data/file1.txt
+        if reprohash verify snapshot.json -d test_data/; then
+          echo "ERROR: Verification should have failed!"
+          exit 1
+        fi
+        echo "✓ Verification correctly detected modification"
