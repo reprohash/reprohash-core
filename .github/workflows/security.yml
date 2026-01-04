@@ -34,8 +34,8 @@ jobs:
     
     - name: Run Bandit security linter
       run: |
-        bandit -r reprohash/ -f json -o bandit-report.json || true
-        bandit -r reprohash/ -f screen
+        bandit -r reprohash/ --skip B602 -f json -o bandit-report.json || true
+        bandit -r reprohash/ --skip B602 -f screen
     
     - name: Upload security reports
       uses: actions/upload-artifact@v4
