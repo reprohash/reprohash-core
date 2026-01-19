@@ -106,7 +106,7 @@ def main():
         # Execute command and capture timing
         runrecord.started = time.time()
         try:
-            result = subprocess.run(args.command, shell=True)
+            result = subprocess.run(args.exec, shell=True)
             exit_code = result.returncode
         except Exception as e:
             print(f"✗ Execution failed: {e}")
