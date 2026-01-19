@@ -35,8 +35,8 @@ def main():
                                        help='Execute command and create sealed runrecord (prospective recording only)')
     run_parser.add_argument('--input-hash', required=True,
                            help='Input snapshot hash')
-    run_parser.add_argument('--command', required=True,
-                           help='Command to execute')
+    run_parser.add_argument('--exec', required=True,
+                           help='Shell command to execute')
     run_parser.add_argument('-o', '--output', required=True,
                            help='Output runrecord JSON file')
     run_parser.add_argument('--reproducibility-class',
@@ -95,13 +95,13 @@ def main():
     elif args.command == 'run':
         from reprohash import RunRecord, ReproducibilityClass
         
-        print(f"🚀 Executing: {args.command}")
+        print(f"🚀 Executing: {args.exec}")
         print(f"   Input hash: {args.input_hash[:16]}...")
         print()
         
         # Create runrecord
         repro_class = ReproducibilityClass[args.reproducibility_class.upper()]
-        runrecord = RunRecord(args.input_hash, args.command, repro_class)
+        runrecord = RunRecord(args.input_hash, args.exec, repro_class)
         
         # Execute command and capture timing
         runrecord.started = time.time()
