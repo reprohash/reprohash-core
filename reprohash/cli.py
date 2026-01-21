@@ -12,6 +12,7 @@ import json
 import subprocess
 import time
 from pathlib import Path
+from reprohash.env_plugins import PluginRegistry
 
 
 def main():
@@ -43,12 +44,14 @@ def main():
                            choices=['deterministic', 'stochastic', 'unknown'],
                            default='unknown',
                            help='Reproducibility class (default: unknown)')
-    
+    run_parser.add_argument('--env-plugin',
+                           action='append',
+                           help='Environment capture plugin (e.g., pip). Can be specified multiple times.' )
     # Verify snapshot command
     verify_parser = subparsers.add_parser('verify', help='Verify snapshot')
     verify_parser.add_argument('snapshot', help='Snapshot file')
     verify_parser.add_argument('-d', '--directory', required=True, help='Data directory')
-    
+
     # Verify runrecord command
     verify_rr_parser = subparsers.add_parser('verify-runrecord', 
                                              help='Verify runrecord seal')
@@ -101,7 +104,7 @@ def main():
         
         # Create runrecord
         repro_class = ReproducibilityClass[args.reproducibility_class.upper()]
-        runrecord = RunRecord(args.input_hash, args.exec, repro_class)
+        runrecord = RunRecord(args.input_hash, args.exec, repro_class, env_plugins=args.env_plugin )
         
         # Execute command and capture timing
         runrecord.started = time.time()
@@ -121,7 +124,10 @@ def main():
         # Export to JSON
         with open(args.output, 'w') as f:
             json.dump(runrecord.to_dict(), f, indent=2)
-        
+        if runrecord.env_metadata:
+            runrecord.save_environment_to_bundle(Path(args.output).parent)
+            print(f"✓ Environment data saved") 
+
         print()
         print(f"✓ RunRecord created and sealed: {args.output}")
         print(f"  Run ID: {runrecord.run_id}")

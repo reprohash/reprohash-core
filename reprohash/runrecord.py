@@ -11,12 +11,19 @@ AUTHENTICATION:
 - Seal does NOT provide AUTHENTICITY (no author binding)
 """
 
+import sys
 import json
 import time
 import uuid
 import platform
 import hashlib
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
+from pathlib import Path
+from reprohash.env_plugins import (
+    EnvironmentCapture,
+    EnvironmentMetadata,
+    update_runrecord_with_environment
+)
 from enum import Enum
 
 
@@ -52,7 +59,8 @@ class RunRecord:
         self,
         input_snapshot_hash: str,
         command: str,
-        reproducibility_class: ReproducibilityClass = ReproducibilityClass.UNKNOWN
+        reproducibility_class: ReproducibilityClass = ReproducibilityClass.UNKNOWN,
+        env_plugins: Optional[List[str]] = None
     ):
         # Single input only (enforced by constructor signature)
         self.run_id = str(uuid.uuid4())
@@ -72,7 +80,16 @@ class RunRecord:
         
         # Seal hash - MUST be set via seal() before archival
         self.runrecord_hash = None
-    
+        self.env_metadata: Optional[EnvironmentMetadata] = None
+        if env_plugins:
+            try:
+                self.env_metadata = EnvironmentCapture.capture_environment(env_plugins)
+                if self.env_metadata:
+                    print(f"✓ Environment captured via {self.env_metadata.plugin_name} plugin", 
+                          file=sys.stderr)
+            except Exception as e:
+                print(f"Warning: Environment capture failed: {e}", file=sys.stderr)
+
     def _capture_minimal_environment(self) -> Dict[str, Any]:
         """Minimal, reliable environment capture."""
         return {
@@ -164,8 +181,8 @@ class RunRecord:
                 "exported, or archived.\n\n"
                 "REASON: Only sealed records provide tamper-evidence."
             )
-        
-        return {
+            
+        base_dict =  {
             "version": VERSION,
             "run_id": self.run_id,
             "runrecord_hash": self.runrecord_hash,
@@ -206,3 +223,18 @@ class RunRecord:
                 )
             }
         }
+        if self.env_metadata:
+            base_dict = update_runrecord_with_environment(base_dict, self.env_metadata)
+
+        return base_dict
+
+    def save_environment_to_bundle(self, bundle_dir: Path):
+        """
+        Save full environment data to bundle directory.
+        
+        Args:
+            bundle_dir: Path to bundle directory
+        """
+        if self.env_metadata:
+            from reprohash.env_plugins import EnvironmentCapture
+            EnvironmentCapture.save_full_environment(self.env_metadata, bundle_dir)
