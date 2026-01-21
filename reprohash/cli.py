@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-Complete CLI with prospective-only runrecord creation.
+Complete CLI update to add compare-environments command.
 
-Design principle: CLI enforces prospective recording via 'run' command only.
-Retroactive creation requires programmatic API (explicit bypass of safeguards).
+This is the exact code to add to your reprohash/cli.py file.
 """
 
 import sys
@@ -12,7 +11,6 @@ import json
 import subprocess
 import time
 from pathlib import Path
-from reprohash.env_plugins import PluginRegistry
 
 
 def main():
@@ -24,6 +22,10 @@ def main():
     
     subparsers = parser.add_subparsers(dest='command', help='Commands')
     
+    # ============================================================
+    # Existing commands (snapshot, verify, run, etc.)
+    # ============================================================
+    
     # Snapshot command
     snapshot_parser = subparsers.add_parser('snapshot', help='Create snapshot')
     snapshot_parser.add_argument('directory', help='Directory to snapshot')
@@ -31,27 +33,31 @@ def main():
     snapshot_parser.add_argument('--source', choices=['posix', 'container', 'drive'], 
                                 default='posix', help='Source type')
     
-    # Run command (ONLY way to create runrecords via CLI)
-    run_parser = subparsers.add_parser('run', 
-                                       help='Execute command and create sealed runrecord (prospective recording only)')
-    run_parser.add_argument('--input-hash', required=True,
-                           help='Input snapshot hash')
-    run_parser.add_argument('--exec', required=True,
-                           help='Shell command to execute')
-    run_parser.add_argument('-o', '--output', required=True,
-                           help='Output runrecord JSON file')
-    run_parser.add_argument('--reproducibility-class',
-                           choices=['deterministic', 'stochastic', 'unknown'],
-                           default='unknown',
-                           help='Reproducibility class (default: unknown)')
-    run_parser.add_argument('--env-plugin',
-                           action='append',
-                           help='Environment capture plugin (e.g., pip). Can be specified multiple times.' )
+    # Run command
+    run_parser = subparsers.add_parser(
+        'run', 
+        help='Execute command and create sealed runrecord (prospective recording only)'
+    )
+    run_parser.add_argument('--input-hash', required=True, help='Input snapshot hash')
+    run_parser.add_argument('--exec', required=True, help='Shell command to execute')
+    run_parser.add_argument('-o', '--output', required=True, help='Output runrecord JSON file')
+    run_parser.add_argument(
+        '--reproducibility-class',
+        choices=['deterministic', 'stochastic', 'unknown'],
+        default='unknown',
+        help='Reproducibility class (default: unknown)'
+    )
+    run_parser.add_argument(
+        '--env-plugin',
+        action='append',
+        help='Environment capture plugin (e.g., pip). Can be specified multiple times.'
+    )
+    
     # Verify snapshot command
     verify_parser = subparsers.add_parser('verify', help='Verify snapshot')
     verify_parser.add_argument('snapshot', help='Snapshot file')
     verify_parser.add_argument('-d', '--directory', required=True, help='Data directory')
-
+    
     # Verify runrecord command
     verify_rr_parser = subparsers.add_parser('verify-runrecord', 
                                              help='Verify runrecord seal')
@@ -76,13 +82,38 @@ def main():
     bundle_parser.add_argument('-o', '--output', required=True, 
                               help='Output bundle directory')
     
+    # ============================================================
+    # NEW: Compare environments command
+    # ============================================================
+    
+    compare_parser = subparsers.add_parser(
+        'compare-environments',
+        help='Compare environment metadata between two RunRecords'
+    )
+    compare_parser.add_argument(
+        'runrecord1',
+        help='First RunRecord JSON file'
+    )
+    compare_parser.add_argument(
+        'runrecord2',
+        help='Second RunRecord JSON file'
+    )
+    compare_parser.add_argument(
+        '--json',
+        action='store_true',
+        help='Output in JSON format'
+    )
+    
     args = parser.parse_args()
     
     if not args.command:
         parser.print_help()
         return
     
+    # ============================================================
     # Handle commands
+    # ============================================================
+    
     if args.command == 'snapshot':
         from reprohash import create_snapshot, SourceType
         
@@ -100,13 +131,23 @@ def main():
         
         print(f"🚀 Executing: {args.exec}")
         print(f"   Input hash: {args.input_hash[:16]}...")
+        
+        if args.env_plugin:
+            print(f"   Environment: Capturing via {', '.join(args.env_plugin)} plugin(s)")
+        
         print()
         
-        # Create runrecord
+        # Create runrecord with optional environment plugins
         repro_class = ReproducibilityClass[args.reproducibility_class.upper()]
-        runrecord = RunRecord(args.input_hash, args.exec, repro_class, env_plugins=args.env_plugin )
         
-        # Execute command and capture timing
+        runrecord = RunRecord(
+            input_snapshot_hash=args.input_hash,
+            command=args.exec,
+            reproducibility_class=repro_class,
+            env_plugins=args.env_plugin
+        )
+        
+        # Execute command
         runrecord.started = time.time()
         try:
             result = subprocess.run(args.exec, shell=True)
@@ -118,27 +159,35 @@ def main():
         runrecord.ended = time.time()
         runrecord.exit_code = exit_code
         
-        # Seal immediately (prospective recording)
+        # Seal
         seal_hash = runrecord.seal()
         
         # Export to JSON
+        runrecord_dict = runrecord.to_dict()
+        
         with open(args.output, 'w') as f:
-            json.dump(runrecord.to_dict(), f, indent=2)
+            json.dump(runrecord_dict, f, indent=2)
+        
+        # Save environment data if captured
         if runrecord.env_metadata:
             runrecord.save_environment_to_bundle(Path(args.output).parent)
-            print(f"✓ Environment data saved") 
-
-        print()
+            print(f"✓ Environment data saved")
+        
         print(f"✓ RunRecord created and sealed: {args.output}")
         print(f"  Run ID: {runrecord.run_id}")
         print(f"  Seal hash: {seal_hash}")
+        
+        if runrecord.env_metadata:
+            print(f"  Environment fingerprint: {runrecord.env_metadata.fingerprint_hash[:16]}...")
+        
         print(f"  Exit code: {exit_code}")
         print(f"  Duration: {runrecord.ended - runrecord.started:.2f}s")
-        print()
-        print("ℹ  Note: Output snapshot binding requires programmatic API")
-        print("   See: https://docs.reprohash.org/advanced-workflows")
         
-        # Exit with same code as the executed command
+        if not runrecord.output_snapshot_hash:
+            print()
+            print("ℹ  Note: Output snapshot binding requires programmatic API")
+            print("   See: https://docs.reprohash.org/advanced-workflows")
+        
         sys.exit(exit_code)
     
     elif args.command == 'verify':
@@ -163,7 +212,6 @@ def main():
         sys.exit(0 if result.outcome.value == "PASS_INPUT_INTEGRITY" else 1)
     
     elif args.command == 'create-bundle':
-        # Full implementation
         from reprohash import Snapshot, RunRecord, SourceType
         from reprohash.bundle import ZenodoBundle
         
@@ -223,6 +271,147 @@ def main():
         print(f"✓ Bundle created: {args.output}")
         print(f"  Bundle hash: {bundle_hash}")
         print(f"  Verification: reprohash verify-bundle {args.output}")
+    
+    # ============================================================
+    # NEW: Handle compare-environments command
+    # ============================================================
+    
+    elif args.command == 'compare-environments':
+        from reprohash.env_plugins import compare_environment_metadata
+        
+        # Load both RunRecords
+        try:
+            with open(args.runrecord1) as f:
+                rr1 = json.load(f)
+        except Exception as e:
+            print(f"✗ Could not load {args.runrecord1}: {e}")
+            sys.exit(1)
+        
+        try:
+            with open(args.runrecord2) as f:
+                rr2 = json.load(f)
+        except Exception as e:
+            print(f"✗ Could not load {args.runrecord2}: {e}")
+            sys.exit(1)
+        
+        # Compare environments
+        comparison = compare_environment_metadata(rr1, rr2)
+        
+        if args.json:
+            # JSON output
+            print(json.dumps(comparison, indent=2))
+            sys.exit(0)
+        
+        # Human-readable output
+        print("=" * 60)
+        print("Environment Comparison")
+        print("=" * 60)
+        
+        if not comparison['comparable']:
+            print(f"\n⚠ {comparison['reason']}")
+            print("\nTo compare environments, both RunRecords must have")
+            print("been created with --env-plugin flag.")
+            print("\nExample:")
+            print("  reprohash run --env-plugin pip ... -o runrecord.json")
+            sys.exit(1)
+        
+        print(f"\nRunRecord 1: {args.runrecord1}")
+        print(f"  Run ID: {rr1.get('run_id', 'unknown')[:16]}...")
+        print(f"  Environment fingerprint: {comparison['fingerprint_a']}")
+        
+        print(f"\nRunRecord 2: {args.runrecord2}")
+        print(f"  Run ID: {rr2.get('run_id', 'unknown')[:16]}...")
+        print(f"  Environment fingerprint: {comparison['fingerprint_b']}")
+        
+        print("\n" + "-" * 60)
+        
+        if comparison['identical']:
+            print("✓ Environments are IDENTICAL")
+            print("\nBoth RunRecords used the same:")
+            
+            env1 = rr1.get('environment_metadata', {})
+            summary = env1.get('summary', {})
+            
+            if 'python' in summary:
+                print(f"  • Python: {summary['python']}")
+            
+            if 'key_packages' in summary:
+                print("  • Key packages:")
+                for pkg, ver in summary['key_packages'].items():
+                    print(f"      {pkg}: {ver}")
+            
+            sys.exit(0)
+        else:
+            print("⚠ Environments DIFFER")
+            print("\nDifferences detected:")
+            
+            for diff in comparison.get('differences', []):
+                print(f"  • {diff}")
+            
+            # Impact analysis
+            print("\n" + "=" * 60)
+            print("Impact Analysis")
+            print("=" * 60)
+            
+            diffs = comparison.get('differences', [])
+            
+            critical = []
+            moderate = []
+            minor = []
+            
+            for diff in diffs:
+                lower_diff = diff.lower()
+                
+                # Check for critical differences
+                if 'numpy' in lower_diff:
+                    # Check for NumPy 1.x -> 2.x (ABI break)
+                    if '1.' in lower_diff and '2.' in lower_diff:
+                        critical.append(f"{diff} [ABI INCOMPATIBILITY LIKELY]")
+                    else:
+                        moderate.append(diff)
+                elif 'torch' in lower_diff:
+                    # Check for major version change
+                    parts = diff.split('vs')
+                    if len(parts) == 2:
+                        try:
+                            v1 = parts[0].split(':')[1].strip().split('.')[0]
+                            v2 = parts[1].strip().split('.')[0]
+                            if v1 != v2:
+                                critical.append(f"{diff} [MAJOR VERSION CHANGE]")
+                            else:
+                                moderate.append(diff)
+                        except:
+                            moderate.append(diff)
+                    else:
+                        moderate.append(diff)
+                elif 'python' in lower_diff:
+                    moderate.append(diff)
+                else:
+                    minor.append(diff)
+            
+            if critical:
+                print("\n🔴 CRITICAL differences (likely to affect results):")
+                for item in critical:
+                    print(f"   {item}")
+            
+            if moderate:
+                print("\n🟡 MODERATE differences (may affect results):")
+                for item in moderate:
+                    print(f"   {item}")
+            
+            if minor:
+                print("\n🟢 MINOR differences (unlikely to affect results):")
+                for item in minor:
+                    print(f"   {item}")
+            
+            print("\n" + "=" * 60)
+            print("Note")
+            print("=" * 60)
+            print("Input integrity is verified separately.")
+            print("Environment differences are informational only.")
+            print("Re-execution is required to confirm reproducibility.")
+            
+            sys.exit(1)  # Exit with code 1 to indicate differences
 
 
 def _print_result(result):
