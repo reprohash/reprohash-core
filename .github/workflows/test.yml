@@ -74,7 +74,7 @@ jobs:
         reprohash snapshot  .  -o snapshot.json 
         
         # Verify
-        reprohash verify snapshot.json
+        reprohash verify snapshot.json -d .
         
         # Create run record
         HASH=$(python -c "import json; print(json.load(open('snapshot.json'))['snapshot_hash'])")
