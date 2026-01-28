@@ -6,10 +6,10 @@ This is the permanent archive of ReproHash version 2.1.8, corresponding to the  
 
 If you use this software in your research, please cite:
 
-[Authors]. (2025). ReproHash: A Verification Primitive for Computational Input Integrity. , [volume], [pages]. doi:[to be assigned]
+[Authors]. (2026). ReproHash: A Verification Primitive for Computational Input Integrity. , [volume], [pages]. doi:[to be assigned]
 
 Software archive: 
-[Authors]. (2025). ReproHash v2.1.8 [Software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+[Authors]. (2026). ReproHash v2.1.8 [Software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
 
 ## Quick Start
 ```bash

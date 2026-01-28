@@ -2,17 +2,14 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "ReproHash: A Verification Primitive for Computational Input Integrity"
 version: 2.1.8
-date-released: 2025-01-28
+date-released: 2026-01-28
 url: "https://github.com/reprohash/reprohash-core"
 repository-code: "https://github.com/reprohash/reprohash-core"
 license: Apache-2.0
 authors:
-  - family-names: "[Your Last Name]"
-    given-names: "[Your First Name]"
-    orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
-  - family-names: "[Co-author Last Name]"
-    given-names: "[Co-author First Name]"
-    orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
+  - family-names: "Michael O."
+    given-names: "Atambo"
+    orcid: "https://orcid.org/0000-0003-3999-0550"
 keywords:
   - computational reproducibility
   - data integrity
