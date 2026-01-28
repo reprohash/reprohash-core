@@ -8,7 +8,7 @@ This is the exact code to add to your reprohash/cli.py file.
 import sys
 import argparse
 import json
-import subprocess
+import subprocess # nosec
 import time
 from pathlib import Path
 

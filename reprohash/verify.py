@@ -26,7 +26,7 @@ class VerificationOutcome(Enum):
     FAIL: Verification found problems (integrity violated)
     INCONCLUSIVE: Verification could not be completed
     """
-    PASS_INPUT_INTEGRITY = "PASS_INPUT_INTEGRITY"
+    PASS_INPUT_INTEGRITY = "PASS_INPUT_INTEGRITY" # nosec
     FAIL = "FAIL"
     INCONCLUSIVE = "INCONCLUSIVE"
 

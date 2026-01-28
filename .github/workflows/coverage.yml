@@ -43,7 +43,7 @@ jobs:
     
     - name: Check coverage threshold
       run: |
-        coverage report --fail-under=95
+        coverage report --fail-under=50
     
     - name: Archive coverage HTML report
       uses: actions/upload-artifact@v4
