@@ -2,7 +2,7 @@
 
 **INTERNAL DOCUMENT**
 
-## Current Status (v2.1.9)
+## Current Status (v2.1.8)
 
 **Structural completeness**: All identified gaps closed  
 **Technical correctness**: No known bugs within stated scope  

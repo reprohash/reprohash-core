@@ -1,6 +1,6 @@
-# ReproHash v2.1.9 - Zenodo Archive
+# ReproHash v2.1.8 - Zenodo Archive
 
-This is the permanent archive of ReproHash version 2.1.9, corresponding to the  manuscript "ReproHash: A Verification Primitive for Computational Input Integrity".
+This is the permanent archive of ReproHash version 2.1.8, corresponding to the  manuscript "ReproHash: A Verification Primitive for Computational Input Integrity".
 
 ## Citation
 
@@ -9,12 +9,12 @@ If you use this software in your research, please cite:
 [Authors]. (2025). ReproHash: A Verification Primitive for Computational Input Integrity. , [volume], [pages]. doi:[to be assigned]
 
 Software archive: 
-[Authors]. (2025). ReproHash v2.1.9 [Software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+[Authors]. (2025). ReproHash v2.1.8 [Software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
 
 ## Quick Start
 ```bash
 # Install from PyPI
-pip install reprohash-core==2.1.9
+pip install reprohash-core==2.1.8
 
 # Or install from this archive
 pip install .

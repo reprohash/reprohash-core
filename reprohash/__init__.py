@@ -1,6 +1,6 @@
 """
 ReproHash - Cryptographic Input State Verification
-Version 2.1.9 | License: Apache 2.0
+Version 2.1.8 | License: Apache 2.0
 
 Design principles:
 - Mechanical enforcement within reference implementation
@@ -9,7 +9,7 @@ Design principles:
 - Governance-based compatibility
 """
 
-__version__ = "2.1.9"
+__version__ = "2.1.8"
 __author__ = "ReproHash Contributors"
 __license__ = "Apache-2.0"
 

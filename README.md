@@ -337,7 +337,7 @@ pytest tests/ -v --cov=reprohash --cov-report=term-missing
   title = {ReproHash: Cryptographic Input State Verification},
   author = {ReproHash Contributors},
   year = {2025},
-  version = {2.1.9},
+  version = {2.1.8},
   url = {https://github.com/reprohash/reprohash-core},
   license = {Apache-2.0}
 }
@@ -405,7 +405,7 @@ limitations under the License.
 
 ## Status
 
-**Version**: 2.1.9  
+**Version**: 2.1.8  
 **Status**: Submission-ready within declared constraints  
 **Tests**: 27/28 passing (96%)  
 **Coverage**: 95%+  
@@ -440,5 +440,5 @@ papers will still be verifiable—in 2037.
 ---
 
 *Last Updated: 2025-01-03*  
-*Version: 2.1.9*  
+*Version: 2.1.8*  
 *License: Apache 2.0*
