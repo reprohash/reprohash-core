@@ -37,7 +37,7 @@ jobs:
     
     - name: Test snapshot verification
       run: |
-        reprohash verify-bundle bundle  -d test_data/
+        reprohash verify-bundle bundle  -d  .
     
     - name: Test determinism (same hash twice)
       run: |
@@ -56,7 +56,7 @@ jobs:
     - name: Test verification failure detection
       run: |
         echo "modified" > test_data/file1.txt
-        if reprohash verify-bundle snapshot.json -d test_data/; then
+        if reprohash verify-bundle snapshot.json -d .  ; then
           echo "ERROR: Verification should have failed!"
           exit 1
         fi
