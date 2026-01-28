@@ -92,7 +92,7 @@ Explicitly states what it does NOT do:
 - Not defending against fraud
 
 ### Governance
-- 10-year free verification guarantee
+- perpetual free verification guarantee (OSS)
 - Verification profile stability
 - Documented versioning and compatibility
 
@@ -104,7 +104,6 @@ See [docs/PHILOSOPHY.md](docs/PHILOSOPHY.md) and [docs/GOVERNANCE.md](docs/GOVER
 
 ### What We Guarantee (Within Declared Constraints)
 
-✅ **10-year free CLI verification** - Minimum guarantee  
 ✅ **Offline verification forever** - No internet required  
 ✅ **Open source** - Apache 2.0, zero dependencies  
 ✅ **Verification profile stability** - Same profile = same semantics  
@@ -344,7 +343,7 @@ pytest tests/ -v --cov=reprohash --cov-report=term-missing
 }
 ```
 
-Paper submission to Nature Methods (pending).
+Paper submission to xxx (pending).
 
 ---
 
@@ -416,7 +415,7 @@ limitations under the License.
 None currently open.
 
 ### Roadmap
-- [ ] Nature Methods submission
+- [ ] submission
 - [ ] Public service beta  
 - [ ] Additional language implementations (Rust, Go)
 - [ ] Formal specification (TLA+/Coq) - future work

@@ -1,9 +1,9 @@
 {
   "title": "ReproHash: A Verification Primitive for Computational Input Integrity",
-  "description": "ReproHash provides cryptographic verification of computational input integrity without re-execution. This repository contains the complete source code, test cases, and examples used in the Nature Methods manuscript 'ReproHash: A Verification Primitive for Computational Input Integrity'.",
+  "description": "ReproHash provides cryptographic verification of computational input integrity without re-execution. This repository contains the complete source code, test cases, and examples used in the manuscript 'ReproHash: A Verification Primitive for Computational Input Integrity'.",
   "creators": [
     {
-      "name": "Atambo, Michael O",
+      "name": "Atambo, Michael O.",
       "affiliation": "Technical University of Kenya",
       "orcid": "0000-0003-3999-0550"
     }

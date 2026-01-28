@@ -469,14 +469,6 @@ Containers are great! But they:
 
 ---
 
-## Paper Language
-
-Use this in your Methods section:
-
-> "We treat execution environments as first-class metadata objects, captured prospectively at runtime via a plugin architecture. Environment metadata is cryptographically bound to run records but is explicitly non-normative: it does not affect verification outcomes. This design reflects the domain-specific nature of computational environments while allowing reviewers and readers to identify potential sources of variability, such as library or compiler versions."
-
----
-
 ## Summary
 
 ### What This System Provides
@@ -494,7 +486,7 @@ Use this in your Methods section:
 
 1. Use `--env-plugin pip` for your ML workflows
 2. Surface environment differences in comparisons
-3. Document this in your Nature Methods paper
+3. Document this in your paper
 4. Extend with domain-specific plugins as needed
 
 ---
@@ -506,7 +498,4 @@ Use this in your Methods section:
 - **Paper Questions**: reviewers@reproledger.com
 
 ---
-
-*Last Updated: 2026-01-20*  
-*Version: 2.1.0*  
 *License: Apache 2.0*

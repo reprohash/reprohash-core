@@ -1,12 +1,12 @@
 # ReproHash v2.1.9 - Zenodo Archive
 
-This is the permanent archive of ReproHash version 2.1.9, corresponding to the Nature Methods manuscript "ReproHash: A Verification Primitive for Computational Input Integrity".
+This is the permanent archive of ReproHash version 2.1.9, corresponding to the  manuscript "ReproHash: A Verification Primitive for Computational Input Integrity".
 
 ## Citation
 
 If you use this software in your research, please cite:
 
-[Authors]. (2025). ReproHash: A Verification Primitive for Computational Input Integrity. Nature Methods, [volume], [pages]. doi:[to be assigned]
+[Authors]. (2025). ReproHash: A Verification Primitive for Computational Input Integrity. , [volume], [pages]. doi:[to be assigned]
 
 Software archive: 
 [Authors]. (2025). ReproHash v2.1.9 [Software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
@@ -34,7 +34,7 @@ pip install .
 
 ## Reproducibility
 
-All test cases from the Nature Methods paper are included and can be verified:
+All test cases from the  Methods paper are included and can be verified:
 ```bash
 # Run the test suite
 pytest
