@@ -78,7 +78,7 @@ jobs:
         
         # Create run record
         HASH=$(python -c "import json; print(json.load(open('snapshot.json'))['content_hash'])")
-        reprohash run $HASH echo "test" > runrecord.json
+        reprohash run --input-hash $HASH   --exec  "echo"   -o runrecord.json   --reproducibility-class stochastic
         
         # Create archive
         reprohash archive snapshot.json runrecord.json
