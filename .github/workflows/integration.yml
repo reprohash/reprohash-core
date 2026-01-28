@@ -34,10 +34,20 @@ jobs:
       run: |
         reprohash snapshot test_data/ -o snapshot.json
         test -f snapshot.json
+
+    - name: Test run record
+      run: |
+        HASH=$(python -c "import json; print(json.load(open('snapshot.json'))['content_hash'])")
+        reprohash run --input-hash $HASH   --exec  "echo"   -o runrecord.json   --reproducibility-class stochastic
+        test -f runrecord.json
     
+    - name: Test bundle creation
+      run: |
+        reprohash create-bundle   --input-snapshot  snapshot.json   --runrecord runrecord.json   -o bundle
+
     - name: Test snapshot verification
       run: |
-        reprohash verify-bundle snapshot.json   -d  .
+        reprohash verify-bundle  bundle/ -d . 
     
     - name: Test determinism (same hash twice)
       run: |
