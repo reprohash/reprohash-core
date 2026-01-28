@@ -91,7 +91,7 @@ jobs:
         echo "✓ Integration test passed"
     
     - name: Upload test artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-archive
         path: test_project/reprohash-archive.tar.gz
