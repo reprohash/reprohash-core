@@ -37,7 +37,7 @@ jobs:
     
     - name: Test snapshot verification
       run: |
-        reprohash verify-bundle bundle  -d  .
+        reprohash verify-bundle snapshot.json   -d  .
     
     - name: Test determinism (same hash twice)
       run: |
