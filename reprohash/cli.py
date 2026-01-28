@@ -17,7 +17,7 @@ def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
         description="ReproHash - Cryptographic Input State Verification",
-        epilog="Complete documentation: https://docs.reprohash.org"
+        epilog="Complete documentation: https://github.com/reprohash/reprohash-core"
     )
     
     subparsers = parser.add_subparsers(dest='command', help='Commands')
@@ -123,13 +123,13 @@ def main():
         with open(args.output, 'w') as f:
             json.dump(snapshot.to_dict(), f, indent=2)
         
-        print(f"✓ Snapshot created: {args.output}")
+        print(f" Snapshot created: {args.output}")
         print(f"  Content hash: {snapshot.content_hash}")
     
     elif args.command == 'run':
         from reprohash import RunRecord, ReproducibilityClass
         
-        print(f"🚀 Executing: {args.exec}")
+        print(f" Executing: {args.exec}")
         print(f"   Input hash: {args.input_hash[:16]}...")
         
         if args.env_plugin:
@@ -153,7 +153,7 @@ def main():
             result = subprocess.run(args.exec, shell=True)
             exit_code = result.returncode
         except Exception as e:
-            print(f"✗ Execution failed: {e}")
+            print(f" Execution failed: {e}")
             exit_code = 1
         
         runrecord.ended = time.time()
@@ -171,9 +171,9 @@ def main():
         # Save environment data if captured
         if runrecord.env_metadata:
             runrecord.save_environment_to_bundle(Path(args.output).parent)
-            print(f"✓ Environment data saved")
+            print(f" Environment data saved")
         
-        print(f"✓ RunRecord created and sealed: {args.output}")
+        print(f" RunRecord created and sealed: {args.output}")
         print(f"  Run ID: {runrecord.run_id}")
         print(f"  Seal hash: {seal_hash}")
         
@@ -186,7 +186,7 @@ def main():
         if not runrecord.output_snapshot_hash:
             print()
             print("ℹ  Note: Output snapshot binding requires programmatic API")
-            print("   See: https://docs.reprohash.org/advanced-workflows")
+            print("   See: https://github.com/reprohash/reprohash-core#advanced-workflows")
         
         sys.exit(exit_code)
     
@@ -268,7 +268,7 @@ def main():
         bundle = ZenodoBundle(input_snapshot, runrecord, output_snapshot)
         bundle_hash = bundle.create_bundle(args.output)
         
-        print(f"✓ Bundle created: {args.output}")
+        print(f" Bundle created: {args.output}")
         print(f"  Bundle hash: {bundle_hash}")
         print(f"  Verification: reprohash verify-bundle {args.output}")
     
@@ -284,14 +284,14 @@ def main():
             with open(args.runrecord1) as f:
                 rr1 = json.load(f)
         except Exception as e:
-            print(f"✗ Could not load {args.runrecord1}: {e}")
+            print(f" Could not load {args.runrecord1}: {e}")
             sys.exit(1)
         
         try:
             with open(args.runrecord2) as f:
                 rr2 = json.load(f)
         except Exception as e:
-            print(f"✗ Could not load {args.runrecord2}: {e}")
+            print(f" Could not load {args.runrecord2}: {e}")
             sys.exit(1)
         
         # Compare environments
@@ -308,7 +308,7 @@ def main():
         print("=" * 60)
         
         if not comparison['comparable']:
-            print(f"\n⚠ {comparison['reason']}")
+            print(f"\n {comparison['reason']}")
             print("\nTo compare environments, both RunRecords must have")
             print("been created with --env-plugin flag.")
             print("\nExample:")
@@ -326,7 +326,7 @@ def main():
         print("\n" + "-" * 60)
         
         if comparison['identical']:
-            print("✓ Environments are IDENTICAL")
+            print(" Environments are IDENTICAL")
             print("\nBoth RunRecords used the same:")
             
             env1 = rr1.get('environment_metadata', {})
@@ -342,7 +342,7 @@ def main():
             
             sys.exit(0)
         else:
-            print("⚠ Environments DIFFER")
+            print(" Environments DIFFER")
             print("\nDifferences detected:")
             
             for diff in comparison.get('differences', []):
@@ -421,22 +421,22 @@ def _print_result(result):
     print(f"{'='*60}")
     
     if result.errors:
-        print("\n✗ Errors:")
+        print("\n Errors:")
         for err in result.errors:
             print(f"  • {err}")
     
     if result.inconclusive_reasons:
-        print("\n⚠ Inconclusive:")
+        print("\n Inconclusive:")
         for reason in result.inconclusive_reasons:
             print(f"  • {reason}")
     
     if result.warnings:
-        print("\n⚠ Warnings:")
+        print("\n Warnings:")
         for warn in result.warnings:
             print(f"  • {warn}")
     
     if result.outcome.value == "PASS_INPUT_INTEGRITY":
-        print("\n✓ All checks passed")
+        print("\n All checks passed")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#SBATCH -J reprohashtestA               # Job name
+#SBATCH -o job.%j.out         # Name of stdout output file (%j expands to jobId)
+#SBATCH -e %j.err             # Name of std err
+#SBATCH --partition=gpu1    # Queue
+#SBATCH --nodes=1             # Total number of nodes requested
+#SBATCH --gres=gpu:1             # Total number of gpus requested
+#SBATCH --cpus-per-task=1     # 
+#SBATCH --time=00:03:00        # Run time (hh:mm:ss) - 1.5 hours
+
+
+
+./run.sh 

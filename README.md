@@ -5,13 +5,13 @@
 Creates cryptographic snapshots of computational input states and enables 
 verification without re-execution.
 
-### Verifies ✅
+### Verifies 
 - Input file integrity (SHA-256 hashes)
 - Snapshot manifest consistency (mechanically enforced scope)
 - Run record tamper-evidence (sealed provenance)
 - Bundle coherence (component binding)
 
-### Does NOT Verify ❌
+### Does NOT Verify 
 - Numerical reproducibility (requires re-execution)
 - Environment equivalence (minimal capture only)
 - Execution correctness (not validated)
@@ -269,6 +269,37 @@ if result.outcome.value == "PASS_INPUT_INTEGRITY":
 ```
 
 ---
+## Development Setup
+```bash
+# Clone repository
+git clone https://github.com/reprohash/reprohash-core.git
+cd reprohash-core
+
+# Install in development mode
+pip install -e ".[dev]"
+
+# Run tests
+pytest tests/ -v --cov=reprohash
+
+# Run conformance tests
+pytest tests/test_vectors/ -v
+```
+
+## Contributing
+
+1. Read PHILOSOPHY.md and GOVERNANCE.md
+2. Check LIMITATIONS.md for scope
+3. Add tests for new features
+4. Maintain 95%+ coverage
+5. Follow existing code style
+6. Update documentation
+
+## Running Conformance Tests
+```bash
+# Verify implementation conforms to profile
+python -m reprohash.conformance tests/test_vectors/v2.1/
+```
+---
 
 ## Testing
 
@@ -338,12 +369,12 @@ We welcome contributions! Please:
 ## Support
 
 ### Questions
-- **Technical**: opensource@reprohash.org
-- **Governance**: governance@reprohash.org  
-- **Reviewers**: reviewers@reprohash.org
+- **Technical**: opensource@reproledger.com
+- **Governance**: governance@reproledger.com  
+- **Reviewers**: reviewers@reproledger.com
 
 ### Resources
-- **Documentation**: https://docs.reprohash.org
+- **Documentation**: https://docs.reproledger.com
 - **Issues**: https://github.com/reprohash/reprohash-core/issues
 - **Discussions**: https://github.com/reprohash/reprohash-core/discussions
 

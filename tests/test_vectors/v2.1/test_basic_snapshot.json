@@ -1,0 +1,12 @@
+{
+  "description": "Basic snapshot verification test",
+  "test_id": "tv-2.1-001",
+  "profile": "reprohash-v2.1-strict",
+  "input": {
+    "files": [
+      {"path": "test.txt", "content": "hello world", "sha256": "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"}
+    ]
+  },
+  "expected_outcome": "PASS_INPUT_INTEGRITY",
+  "expected_hash": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae"
+}

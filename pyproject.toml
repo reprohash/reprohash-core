@@ -7,7 +7,7 @@ name = "reprohash-core"
 version = "2.1.9"
 description = "Cryptographic Input State Verification for Scientific Computing"
 authors = [
-    {name = "ReproHash Contributors", email = "opensource@reprohash.org"}
+    {name = "ReproHash Contributors", email = "opensource@reproledger.com"}
 ]
 readme = "README.md"
 license = {text = "Apache-2.0"}
@@ -37,9 +37,9 @@ dev = [
 reprohash = "reprohash.cli:main"
 
 [project.urls]
-Homepage = "https://reprohash.org"
+Homepage = "https://reproledger.com"
 Repository = "https://github.com/reprohash/reprohash-core"
-Documentation = "https://docs.reprohash.org"
+Documentation = "https://docs.reproledger.com"
 "Bug Tracker" = "https://github.com/reprohash/reprohash-core/issues"
 
 # CRITICAL: This fixes both package discovery and module import

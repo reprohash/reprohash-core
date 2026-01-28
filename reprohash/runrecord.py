@@ -85,7 +85,7 @@ class RunRecord:
             try:
                 self.env_metadata = EnvironmentCapture.capture_environment(env_plugins)
                 if self.env_metadata:
-                    print(f"✓ Environment captured via {self.env_metadata.plugin_name} plugin", 
+                    print(f" Environment captured via {self.env_metadata.plugin_name} plugin", 
                           file=sys.stderr)
             except Exception as e:
                 print(f"Warning: Environment capture failed: {e}", file=sys.stderr)

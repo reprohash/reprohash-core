@@ -20,6 +20,28 @@ Each bundle includes a `verification_profile`:
 }
 ```
 
+## Conformance Testing
+
+### Test Vector Repository
+Location: `tests/test_vectors/`
+
+Each profile version has normative test bundles:
+- `v2.1/test_basic_snapshot.json`
+- `v2.1/test_runrecord_seal.json`
+- `v2.1/test_bundle_verification.json`
+
+### Claiming Conformance
+To claim support for `reprohash-v2.1-strict`:
+1. Pass all test vectors in `tests/test_vectors/v2.1/`
+2. Document any deviations
+3. Maintain public test results
+
+### Breaking Change Process
+1. Propose change via RFC
+2. Community review (30 days)
+3. Create new profile ID if semantics change
+4. Maintain backward compatibility documentation
+
 ### Profile Nature: Declarative, Not Executable
 
 **IMPORTANT**: The verification profile is **declarative**, not mechanically 
@@ -200,5 +222,5 @@ as a limitation.
 
 ## Questions?
 
-**Governance questions**: governance@reprohash.org  
-**Technical questions**: opensource@reprohash.org
+**Governance questions**: governance@reproledger.com 
+**Technical questions**: opensource@reproledger.com

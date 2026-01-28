@@ -1,27 +1,51 @@
 {
-  "title": "ReproHash v2.1.9: Cryptographic Input Verification for Computational Research",
-  "upload_type": "software",
-  "description": "Reference bundles, test vectors, and specifications supporting the ReproHash verification framework.",
+  "title": "ReproHash: A Verification Primitive for Computational Input Integrity",
+  "description": "ReproHash provides cryptographic verification of computational input integrity without re-execution. This repository contains the complete source code, test cases, and examples used in the Nature Methods manuscript 'ReproHash: A Verification Primitive for Computational Input Integrity'.",
   "creators": [
     {
-      "name": "Your Name",
-      "affiliation": "Your Institution",
-      "orcid": "0000-0000-0000-0000"
+      "name": "Atambo, Michael O",
+      "affiliation": "Technical University of Kenya",
+      "orcid": "0000-0003-3999-0550"
     }
   ],
+  "upload_type": "software",
+  "access_right": "open",
   "license": "Apache-2.0",
   "keywords": [
-    "reproducibility",
-    "computational methods",
-    "cryptographic verification",
-    "scientific workflows"
+    "computational reproducibility",
+    "input verification",
+    "data integrity",
+    "cryptographic hashing",
+    "scientific methods",
+    "peer review",
+    "machine learning",
+    "density functional theory",
+    "bioinformatics"
   ],
   "related_identifiers": [
     {
-      "relation": "isSupplementTo",
-      "identifier": "DOI_OF_NATURE_PAPER",
-      "scheme": "doi"
+      "relation": "isDocumentedBy",
+      "identifier": "https://github.com/reprohash/reprohash-core/blob/main/README.md",
+      "resource_type": "other",
+      "scheme": "url"
     }
-  ]
+  ],
+  "contributors": [
+  ],
+  "references": [
+    "Baker, M. (2016). 1,500 scientists lift the lid on reproducibility. Nature, 533(7604), 452-454.",
+    "Stodden, V., et al. (2016). Enhancing reproducibility for computational methods. Science, 354(6317), 1240-1241."
+  ],
+  "communities": [
+    {
+      "identifier": "reproducibility"
+    },
+    {
+      "identifier": "open-science"
+    }
+  ],
+  "grants": [
+  ],
+  "version": "2.1.9",
+  "language": "eng"
 }
-

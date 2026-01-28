@@ -77,7 +77,7 @@ See GOVERNANCE.md for:
 
 **Internal development**: Use GitHub Issues  
 **Design philosophy**: Use GitHub Discussions  
-**Governance questions**: governance@reprohash.org
+**Governance questions**: governance@reproledger.com
 
 ---
 

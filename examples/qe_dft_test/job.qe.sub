@@ -1,0 +1,62 @@
+#!/bin/bash
+
+#SBATCH -J reprohashtestA               # Job name
+#SBATCH -o job.%j.out         # Name of stdout output file (%j expands to jobId)
+#SBATCH -e %j.err             # Name of std err
+#SBATCH --partition=gpu1    # Queue
+#SBATCH --nodes=1             # Total number of nodes requested
+#SBATCH --gres=gpu:1             # Total number of gpus requested
+#SBATCH --cpus-per-task=1     # 
+#SBATCH --time=00:03:00        # Run time (hh:mm:ss) - 1.5 hours
+
+# Launch MPI-based executable
+module load applications/gpu/qespresso/7.3.1
+module load applications/gpu/python/conda-25.1.1-python-3.9.21 
+conda activate ml-a
+
+echo "# Test A"
+
+echo $PWD/mos2_test_A
+cd  ./mos2_test_A
+echo "Cleaning dir of existing outputs and artifacts"
+echo rm -rf bundle/  input_snapshot.json  mos2.out  tmp runrecord.json
+rm -rf bundle/  input_snapshot.json  mos2.out  tmp runrecord.json
+
+echo reprohash snapshot .  -o input_snapshot.json 
+reprohash snapshot .  -o input_snapshot.json
+
+echo reprohash run   --input-hash "$(python3 -c "import json; print(json.load(open('input_snapshot.json'))['content_hash'])")"   --exec  "mpirun -np 1  pw.x < mos2.in > mos2.out"   -o runrecord.json   --reproducibility-class stochastic 
+reprohash run   --input-hash "$(python3 -c "import json; print(json.load(open('input_snapshot.json'))['content_hash'])")"   --exec  "mpirun -np 1  pw.x < mos2.in > mos2.out"   -o runrecord.json   --reproducibility-class stochastic 
+
+echo reprohash create-bundle   --input-snapshot input_snapshot.json   --runrecord runrecord.json   -o bundle/
+reprohash create-bundle   --input-snapshot input_snapshot.json   --runrecord runrecord.json   -o bundle/
+
+echo "# Verify Bundle"
+echo reprohash verify-bundle bundle/ 
+reprohash verify-bundle bundle/ 
+
+# Different Pseudopotentials
+echo "cd ../mos2_test_B"
+echo "Test B, changed pseudo w.r.t A "
+
+cd ../mos2_test_B
+echo "Cleaning dir of existing outputs and artifacts"
+echo rm -rf bundle/  input_snapshot.json  mos2.out  tmp runrecord.json
+rm -rf bundle/  input_snapshot.json  mos2.out  tmp runrecord.json
+# Try to verify with bundle from test_A
+echo "# Try to verify with bundle from mos2_test_A, which has a different pseudo"
+reprohash verify-bundle bundle/  -d ../mos2_test_B
+
+echo "# Reprohash for mos2_test_B itself"
+# Run reprohash
+echo reprohash snapshot .  -o input_snapshot.json
+reprohash snapshot .  -o input_snapshot.json
+
+echo reprohash run   --input-hash "$(python3 -c "import json; print(json.load(open('input_snapshot.json'))['content_hash'])")"   --exec  "mpirun -np 1  pw.x  < mos2.in > mos2.out"   -o runrecord.json   --reproducibility-class stochastic 
+reprohash run   --input-hash "$(python3 -c "import json; print(json.load(open('input_snapshot.json'))['content_hash'])")"   --exec  "mpirun -np 1  pw.x  < mos2.in > mos2.out"   -o runrecord.json   --reproducibility-class stochastic 
+
+echo reprohash create-bundle   --input-snapshot input_snapshot.json   --runrecord runrecord.json   -o bundle/
+reprohash create-bundle   --input-snapshot input_snapshot.json   --runrecord runrecord.json   -o bundle/
+
+echo reprohash verify-bundle bundle/ 
+reprohash verify-bundle bundle/ 

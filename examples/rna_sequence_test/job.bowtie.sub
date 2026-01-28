@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#SBATCH -J reprohashtestA               # Job name
+#SBATCH -o job.%j.out         # Name of stdout output file (%j expands to jobId)
+#SBATCH -e %j.err             # Name of std err
+#SBATCH --partition=normal    # Queue
+#SBATCH --nodes=1             # Total number of nodes requested
+#SBATCH --cpus-per-task=1     # 
+#SBATCH --time=00:25:00        # Run time (hh:mm:ss) - 1.5 hours
+
+# Launch MPI-based executable
+cd /home/matambo/localscratch/prr/rna_sequence_test
+./run.sh

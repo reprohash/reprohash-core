@@ -1,0 +1,47 @@
+# ReproHash Verification Profile Specification v2.1
+# Status: Normative Reference
+
+profile_id: reprohash-v2.1-strict
+schema_version: "2.1"
+status: stable
+
+# Verification Semantics
+verification_rules:
+  bundle_seal: required
+  component_seals: required
+  provenance_chain: verified
+  file_integrity: required
+
+# Outcome Model
+outcome_model:
+  values:
+    - PASS_INPUT_INTEGRITY
+    - FAIL
+    - INCONCLUSIVE
+  semantics: |
+    PASS_INPUT_INTEGRITY: All cryptographic checks passed within stated scope
+    FAIL: Integrity violation detected (cryptographic mismatch)
+    INCONCLUSIVE: Verification could not be completed (infrastructure unavailable)
+
+# Verification Procedure
+verification_steps:
+  1: Verify bundle manifest seal
+  2: Verify component file integrity (SHA-256)
+  3: Verify snapshot content_hash
+  4: Verify runrecord seal
+  5: Verify provenance chain consistency
+  6: Optional data verification
+
+# Compatibility
+backward_compatible_with:
+  - reprohash-v2.0-strict
+
+breaking_changes_from_v2_0: []
+
+# Test Vectors
+test_vectors_location: tests/test_vectors/v2.1/
+
+# Governance
+maintainer: ReproHash Core Team
+specification_url: https://github.com/reprohash/reprohash-core/blob/main/spec/verification-profile-v2.yaml
+change_control: Semantic versioning + conformance testing
