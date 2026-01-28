@@ -71,7 +71,7 @@ jobs:
         echo "world" > file2.txt
         
         # Create snapshot
-        reprohash snapshot . > snapshot.json
+        reprohash snapshot  .  -o snapshot.json 
         
         # Verify
         reprohash verify snapshot.json
