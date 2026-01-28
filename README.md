@@ -439,6 +439,5 @@ papers will still be verifiable—in 2037.
 
 ---
 
-*Last Updated: 2025-01-03*  
 *Version: 2.1.8*  
 *License: Apache 2.0*
