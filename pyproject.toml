@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "wheel",  "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "reprohash-core"
-version = "2.1.8"
+dynamic = ["version"]
 description = "Cryptographic Input State Verification for Scientific Computing"
 authors = [
     {name = "ReproHash Contributors", email = "opensource@reproledger.com"}
@@ -57,3 +57,5 @@ addopts = "--cov=reprohash --cov-report=term-missing"
 [tool.black]
 line-length = 100
 target-version = ['py38']
+
+[tool.setuptools_scm]
