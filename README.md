@@ -46,25 +46,24 @@ reprohash verify snapshot.json -d data/
 ```bash
 # 1. Snapshot inputs
 reprohash snapshot input_data/ -o input_snapshot.json
+  A: More advanced path
+  B: Easier Recommended path
+  Choose one between A and B 
+  # 2A. Run your computation 
+  python analysis.py
 
-# 2. Run your computation
-python analysis.py
+  # 3A. Create RunRecord (programmatically in your script)
+  # See examples/ for details
 
-# 3. Create RunRecord (programmatically in your script)
-# See examples/ for details
+  # 2B. Run and capture prospectively
+  reprohash run   --input-hash "$(python3 -c "import json; print(json.load(open('input_snapshot.json'))['content_hash'])")"   --exec  "python analysis.py"   --env-plugin pip   -o runrecord.json   --reproducibility-class stochastic 
+  # 3B. Done automatically by prospective capture, go to 4. 
 
-# 4. Snapshot outputs  
-reprohash snapshot output_data/ -o output_snapshot.json
+# 4. Create  verification bundle
+reprohash create-bundle   --input-snapshot input_snapshot.json   --runrecord runrecord.json   -o bundle/
 
-# 5. Create complete bundle
-reprohash create-bundle \
-  --input-snapshot input_snapshot.json \
-  --runrecord runrecord.json \
-  --output-snapshot output_snapshot.json \
-  -o bundle/
-
-# 6. Verify complete bundle
-reprohash verify-bundle bundle/ -d input_data/
+# 5. Verify complete bundle against inputs
+reprohash verify-bundle bundle/   -d ./input_data/
 ```
 
 ---
