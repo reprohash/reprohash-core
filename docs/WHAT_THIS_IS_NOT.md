@@ -163,7 +163,7 @@ ReproHash does NOT:
 
 **Explicitly**:
 - Open source core (Apache 2.0)
-- Zero dependencies on paid service
+- Zero dependencies on a future paid service
 - Free CLI works forever
 - Papers remain verifiable if company disappears
 

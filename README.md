@@ -311,7 +311,6 @@ pip install -e ".[dev]"
 # Run tests with coverage
 pytest tests/ -v --cov=reprohash --cov-report=term-missing
 
-# Expected: 27/28 tests passing, 95%+ coverage
 ```
 
 ---
@@ -343,7 +342,7 @@ pytest tests/ -v --cov=reprohash --cov-report=term-missing
 }
 ```
 
-Paper submission to xxx (pending).
+Paper submission pending.
 
 ---
 
@@ -405,14 +404,8 @@ limitations under the License.
 
 ## Status
 
-**Version**: 2.1.8  
-**Status**: Submission-ready within declared constraints  
-**Tests**: 27/28 passing (96%)  
-**Coverage**: 95%+  
 **Dependencies**: Zero (stdlib only)  
 
-### Known Issues
-None currently open.
 
 ### Roadmap
 - [ ] submission
@@ -422,16 +415,7 @@ None currently open.
 
 ---
 
-## Acknowledgments
 
-ReproHash achieves something rare: satisfying both scientific integrity 
-requirements AND commercial sustainability without compromise.
-
-The key insight: **The thing that journals rely on must never depend on 
-your company existing.**
-
-By encoding this principle structurally, ReproHash will still be working—and 
-papers will still be verifiable—in 2037.
 
 [![Tests](https://github.com/reprohash/reprohash-core/workflows/Tests/badge.svg)](https://github.com/reprohash/reprohash-core/actions)
 [![Coverage](https://codecov.io/gh/reprohash/reprohash-core/branch/main/graph/badge.svg)](https://codecov.io/gh/reprohash/reprohash-core)
@@ -439,5 +423,4 @@ papers will still be verifiable—in 2037.
 
 ---
 
-*Version: 2.1.8*  
 *License: Apache 2.0*

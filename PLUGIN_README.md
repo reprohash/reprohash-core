@@ -1,6 +1,5 @@
 # ReproHash Environment Plugin System
 
-**Version:** 2.1  
 **Status:** Production-ready  
 **Design:** Minimal, non-normative, domain-agnostic
 
@@ -64,7 +63,7 @@ When `--env-plugin pip` is used:
 
 ## Why This Matters
 
-### Your Original Problem
+### Case Study
 
 You ran the **same code** in two environments:
 
@@ -73,7 +72,7 @@ You ran the **same code** in two environments:
 
 ReproHash correctly verified **input integrity** both times.
 
-But reviewers will ask: *"Did the environment differ?"*
+But reviewers  ask: *"Did the environment differ?"*
 
 ### What Environment Plugins Solve
 
@@ -338,27 +337,6 @@ But we can provide:
 
 ---
 
-## Integration with Existing Workflow
-
-### Before (v2.0)
-
-```bash
-reprohash snapshot data/ -o snapshot.json
-reprohash run --input-hash $HASH --exec "python train.py" -o rr.json
-reprohash create-bundle --input-snapshot snapshot.json --runrecord rr.json -o bundle/
-```
-
-### After (v2.1)
-
-```bash
-reprohash snapshot data/ -o snapshot.json
-reprohash run --input-hash $HASH --exec "python train.py" --env-plugin pip -o rr.json
-reprohash create-bundle --input-snapshot snapshot.json --runrecord rr.json -o bundle/
-```
-
-**Change:** Just add `--env-plugin pip`. Everything else stays the same.
-
----
 
 ## Commercial Service Layer
 
@@ -368,14 +346,13 @@ reprohash create-bundle --input-snapshot snapshot.json --runrecord rr.json -o bu
 - Environment fingerprint hashing
 - CLI comparison
 
-### Paid Service (Optional)
+### Paid Service (TBD)
 - Automatic environment capture
 - Known incompatibility warnings ("NumPy <2 → ≥2: ABI break likely")
 - Policy enforcement ("Reject runs unless environment matches")
 - Visual diff explanations
 - Cross-run analytics
-- Drive sidebar integration
-
+- .. other possibilities
 ---
 
 ## Versioning and Compatibility
