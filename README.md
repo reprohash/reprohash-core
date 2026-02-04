@@ -146,14 +146,14 @@ See [docs/FOR_REVIEWERS.md](docs/FOR_REVIEWERS.md) for detailed guidance.
 
 ---
 
-## Optional Paid Service
+## Future Optional Paid Service (TBD)
 
-A paid service exists for convenience (Drive sync, team features).
+A paid service might exist in the future for convenience (Drive sync, team features).
 
-**The service is strictly optional and never required for verification.**
+**The service will be  strictly optional and never required for verification.**
 
 Papers verified with ReproHash remain verifiable forever using only this 
-free CLI, regardless of whether the service exists.
+free CLI, regardless of whether that service exists.
 
 ---
 
