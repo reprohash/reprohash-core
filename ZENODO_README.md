@@ -9,7 +9,7 @@ If you use this software in your research, please cite:
 [Authors]. (2026). ReproHash: A Verification Primitive for Computational Input Integrity. , [volume], [pages]. doi:[to be assigned]
 
 Software archive: 
-[Authors]. (2026). ReproHash v2.1.8 [Software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+Atambo. (2026). ReproHash v2.1.8 [Software]. Zenodo. https://doi.org/10.5281/zenodo.18406385
 
 ## Quick Start
 ```bash
