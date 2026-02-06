@@ -20,7 +20,6 @@ date: 4 February 2025
 bibliography: paper.bib
 ---
 
-
 # Summary
 
 Computational reproducibility failures often stem from undocumented changes to input data rather than algorithmic complexity. `ReproHash` is a lightweight Python package that enables cryptographic verification of computational input integrity without re-execution. By mechanically separating input verification from execution reproducibility, ReproHash provides bounded, defensible claims suitable for peer review.
@@ -71,12 +70,12 @@ This aligns with Popperian falsification [@popper1959logic], distinguishing "cla
 We compare ReproHash with baseline verification approaches:
 
 | Approach | Detects Changes | Explicit Semantics | Verify Time | Long-term Stable | Ease of Use |
-|----------|----------------|-------------------|-------------|------------------|-------------|
-| md5sum | ✓ | ✗ | <1s | ✓ | ✗ (manual) |
-| BagIt | ✓ | Partial | <1s | ✓ | Moderate |
-| Git commit | ✓ | ✗ | <1s | ✗ (SHA-1) | Moderate |
-| Docker hash | Partial | ✗ | Minutes | ✗ (decay) | ✗ (complex) |
-| **ReproHash** | **✓** | **✓ (tri-valued)** | **<1s** | **✓** | **✓** |
+|----------|:---------------:|:------------------:|:-----------:|:----------------:|:-----------:|
+| md5sum | Yes | No | <1s | Yes | No (manual) |
+| BagIt | Yes | Partial | <1s | Yes | Moderate |
+| Git commit | Yes | No | <1s | No (SHA-1) | Moderate |
+| Docker hash | Partial | No | Minutes | No (decay) | No (complex) |
+| **ReproHash** | **Yes** | **Yes (tri-valued)** | **<1s** | **Yes** | **Yes** |
 
 **Key findings**: While all approaches detect file changes, only ReproHash provides tri-valued outcomes with formal semantics, governed verification profiles, and explicit binding of checksums to execution claims.
 
@@ -128,6 +127,7 @@ ReproHash deliberately limits scope to input integrity, explicitly not attemptin
 **Researcher interest**: Informal discussions with 20 computational scientists showed 75% would use for next manuscript submission.
 
 **Software quality**:
+
 - Comprehensive test suite (>90% coverage)
 - Continuous integration (GitHub Actions)
 - Type hints throughout (mypy-compatible)
@@ -157,4 +157,3 @@ ReproHash is actively maintained with regular releases. Community contributions 
 We thank the reproducibility community for feedback. This work used computational resources from Kenya Education Network. We acknowledge support from Technical University of Kenya.
 
 # References
-
